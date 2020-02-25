@@ -10,6 +10,8 @@ set(expect
   query/client-json-bad-root/query.json
   query/client-json-empty
   query/client-json-empty/query.json
+  query/client-json-extra
+  query/client-json-extra/query.json
   query/client-not-file
   query/client-not-file/query.json
   query/client-request-array-negative-major-version
