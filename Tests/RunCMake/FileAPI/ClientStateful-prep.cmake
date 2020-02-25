@@ -3,7 +3,6 @@ file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-empty-array/q
 file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-empty-object/query.json" "{}")
 file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-json-bad-root/query.json" [["invalid root"]])
 file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-json-empty/query.json" "")
-file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-json-extra/query.json" "{}x")
 file(MAKE_DIRECTORY "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-not-file/query.json")
 
 file(WRITE "${RunCMake_TEST_BINARY_DIR}/.cmake/api/v1/query/client-requests-bad/query.json" [[{ "requests": {} }]])
