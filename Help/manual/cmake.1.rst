@@ -242,10 +242,12 @@ Options
  :command:`message(SEND_ERROR)` calls.
 
 ``--debug-find``
- Put cmake find in a debug mode.
+ Put cmake find commands in a debug mode.
 
  Print extra find call information during the cmake run to standard
  error. Output is designed for human consumption and not for parsing.
+ See also the :variable:`CMAKE_FIND_DEBUG_MODE` variable for debugging
+ a more local part of the project.
 
 ``--trace``
  Put cmake in trace mode.
@@ -266,7 +268,7 @@ Options
      Prints each trace line in a human-readable format. This is the
      default format.
 
-   ``json``
+   ``json-v1``
      Prints each line as a separate JSON document. Each document is
      separated by a newline ( ``\n`` ). It is guaranteed that no
      newline characters will be present inside a JSON document.

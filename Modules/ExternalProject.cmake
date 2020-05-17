@@ -2595,7 +2595,7 @@ function(_ep_add_download_command name)
       set(cmd   ${CMAKE_COMMAND} -E rm -rf ${source_dir}
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${abs_dir} ${source_dir})
     else()
-      get_property(no_extract TARGET "${name}" PROPERTY _EP_DOWNLOAD_NO_EXTRACT SET)
+      get_property(no_extract TARGET "${name}" PROPERTY _EP_DOWNLOAD_NO_EXTRACT)
       if("${url}" MATCHES "^[a-z]+://")
         # TODO: Should download and extraction be different steps?
         if("x${fname}" STREQUAL "x")
@@ -2974,6 +2974,10 @@ function(_ep_extract_configure_command var name)
       endif()
       _ep_write_initial_cache(${name} "${_ep_cache_args_script}" "${script_initial_cache_force}${script_initial_cache_default}")
       list(APPEND cmd "-C${_ep_cache_args_script}")
+      _ep_replace_location_tags(${name} _ep_cache_args_script)
+      set(_ep_cache_args_script
+        "${_ep_cache_args_script}"
+        PARENT_SCOPE)
     endif()
 
     list(APPEND cmd "<SOURCE_DIR><SOURCE_SUBDIR>")

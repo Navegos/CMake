@@ -1,8 +1,8 @@
-cmake (3.17.0-1ubuntu1) focal; urgency=low
+cmake (3.17.2-1ubuntu2) focal; urgency=low
 
-  * Imported https://gitlab.kitware.com/cmake/cmake release Upstream version 3.17.0
+  * Imported https://gitlab.kitware.com/cmake/cmake release Upstream version 3.17.2
 
- -- Navegos QA <navegos@outlook.com>  Sun, 25 Feb 2020 16:45:14 +0000
+ -- Navegos QA <navegos@outlook.com>  Sun, 17 May 2020 16:09:14 +0000
  
 cmake (3.16.3-1ubuntu1) focal; urgency=low
 

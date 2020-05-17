@@ -78,10 +78,10 @@ endfunction()
 
 ###############################################################################
 
-set(RunCMake_TEST_NO_CLEAN 1)
-
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/Simple-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=RelWithDebInfo;-DCMAKE_NMC_CROSS_CONFIGS=all")
+# IMPORTANT: Setting RelWithDebInfo as the first item in CMAKE_CONFIGURATION_TYPES
+# generates a build.ninja file with that configuration
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo\\;Debug\\;Release\\;MinSizeRel;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(Simple)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -113,7 +113,7 @@ run_ninja(Simple default-build-file-clean-minsizerel build.ninja clean:MinSizeRe
 run_ninja(Simple default-build-file-all build.ninja all)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/SimpleDefaultBuildAlias-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=Release;-DCMAKE_NMC_DEFAULT_CONFIGS=all;-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_DEFAULT_BUILD_TYPE=Release;-DCMAKE_DEFAULT_CONFIGS=all;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(SimpleDefaultBuildAlias)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -122,7 +122,7 @@ run_ninja(SimpleDefaultBuildAlias all build.ninja all)
 run_ninja(SimpleDefaultBuildAlias clean build.ninja clean)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/SimpleDefaultBuildAliasList-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=Release;-DCMAKE_NMC_DEFAULT_CONFIGS=Debug\\;Release;-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_DEFAULT_BUILD_TYPE=Release;-DCMAKE_DEFAULT_CONFIGS=Debug\\;Release;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(SimpleDefaultBuildAliasList)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -133,7 +133,7 @@ run_ninja(SimpleDefaultBuildAliasList all-relwithdebinfo build.ninja all:RelWith
 run_ninja(SimpleDefaultBuildAliasList clean-configs build.ninja clean)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/SimpleDefaultBuildAliasListCross-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=RelWithDebInfo;-DCMAKE_NMC_DEFAULT_CONFIGS=all;-DCMAKE_NMC_CROSS_CONFIGS=Debug\\;Release")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_DEFAULT_BUILD_TYPE=RelWithDebInfo;-DCMAKE_DEFAULT_CONFIGS=all;-DCMAKE_CROSS_CONFIGS=Debug\\;Release")
 run_cmake_configure(SimpleDefaultBuildAliasListCross)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -141,27 +141,23 @@ run_ninja(SimpleDefaultBuildAliasListCross target-configs build.ninja simpleexe)
 
 unset(RunCMake_TEST_BINARY_DIR)
 
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release;-DCMAKE_NMC_CROSS_CONFIGS=Debug\\;Release\\;RelWithDebInfo")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release;-DCMAKE_CROSS_CONFIGS=Debug\\;Release\\;RelWithDebInfo")
 run_cmake(InvalidCrossConfigs)
 unset(RunCMake_TEST_OPTIONS)
 
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release;-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=RelWithDebInfo")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release;-DCMAKE_DEFAULT_BUILD_TYPE=RelWithDebInfo")
 run_cmake(InvalidDefaultBuildFileConfig)
 unset(RunCMake_TEST_OPTIONS)
 
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=Debug\\;Release;-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=Release;-DCMAKE_NMC_DEFAULT_CONFIGS=Debug\\;Release\\;RelWithDebInfo")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CROSS_CONFIGS=Debug\\;Release;-DCMAKE_DEFAULT_BUILD_TYPE=Release;-DCMAKE_DEFAULT_CONFIGS=Debug\\;Release\\;RelWithDebInfo")
 run_cmake(InvalidDefaultConfigsCross)
 unset(RunCMake_TEST_OPTIONS)
 
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=Debug\\;Release;-DCMAKE_NMC_DEFAULT_CONFIGS=all")
-run_cmake(InvalidDefaultConfigsNoDefaultFile)
-unset(RunCMake_TEST_OPTIONS)
-
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=Release;-DCMAKE_NMC_DEFAULT_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_DEFAULT_BUILD_TYPE=Release;-DCMAKE_DEFAULT_CONFIGS=all")
 run_cmake(InvalidDefaultConfigsNoCross)
 unset(RunCMake_TEST_OPTIONS)
 
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_DEFAULT_BUILD_FILE_CONFIG=Release")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_DEFAULT_BUILD_TYPE=Release")
 run_cmake(DefaultBuildFileConfig)
 unset(RunCMake_TEST_OPTIONS)
 
@@ -178,7 +174,7 @@ run_ninja(SimpleNoCross all-all build-Debug.ninja all:all)
 run_cmake_build(SimpleNoCross all-clean Debug clean:all)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/SimpleCrossConfigs-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=Debug\\;Release")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CROSS_CONFIGS=Debug\\;Release")
 run_cmake_configure(SimpleCrossConfigs)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
 run_ninja(SimpleCrossConfigs release-in-release-graph build-Release.ninja simpleexe)
@@ -192,21 +188,22 @@ run_cmake_build(SimpleCrossConfigs all-all-in-release-graph Release all:all)
 run_cmake_build(SimpleCrossConfigs all-relwithdebinfo-in-release-graph Release all:RelWithDebInfo)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/Framework-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(Framework)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
 run_cmake_build(Framework framework Debug all)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/FrameworkDependencyAutogen-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(FrameworkDependencyAutogen)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
 run_cmake_build(FrameworkDependencyAutogen framework Release test2:Debug)
 
+set(RunCMake_TEST_NO_CLEAN 1)
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/CustomCommandGenerator-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(CustomCommandGenerator)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -221,9 +218,10 @@ run_cmake_command(CustomCommandGenerator-debug-in-release-graph-generated "${TAR
 run_ninja(CustomCommandGenerator debug-in-release-graph-clean build-Debug.ninja clean:Debug)
 run_ninja(CustomCommandGenerator release-in-debug-graph build-Debug.ninja generated:Release)
 run_cmake_command(CustomCommandGenerator-release-in-debug-graph-generated "${TARGET_FILE_generated_Release}")
+unset(RunCMake_TEST_NO_CLEAN)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/CustomCommandsAndTargets-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(CustomCommandsAndTargets)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -243,7 +241,7 @@ unset(RunCMake_TEST_BINARY_DIR)
 run_cmake(CustomCommandDepfile)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/PostfixAndLocation-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release;-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(PostfixAndLocation)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -258,14 +256,14 @@ run_ninja(Clean release-notall build-Release.ninja exenotall)
 run_cmake_build(Clean release-clean Release clean)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/AdditionalCleanFiles-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_CONFIGURATION_TYPES=Debug\\;Release\\;MinSizeRel\\;RelWithDebInfo;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(AdditionalCleanFiles)
 unset(RunCMake_TEST_OPTIONS)
 run_cmake_build(AdditionalCleanFiles release-clean Release clean)
 run_ninja(AdditionalCleanFiles all-clean build-Debug.ninja clean:all)
 
 set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/Install-build)
-set(RunCMake_TEST_OPTIONS "-DCMAKE_INSTALL_PREFIX=${RunCMake_TEST_BINARY_DIR}/install;-DCMAKE_NMC_CROSS_CONFIGS=all")
+set(RunCMake_TEST_OPTIONS "-DCMAKE_INSTALL_PREFIX=${RunCMake_TEST_BINARY_DIR}/install;-DCMAKE_CROSS_CONFIGS=all")
 run_cmake_configure(Install)
 unset(RunCMake_TEST_OPTIONS)
 include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)
@@ -277,6 +275,16 @@ run_ninja(Install debug-in-release-graph-install build-Release.ninja install:Deb
 #run_cmake_configure(AutoMocExecutable)
 #run_cmake_build(AutoMocExecutable debug-in-release-graph Release exe)
 
+# Need to test this manually because run_cmake() adds --no-warn-unused-cli
+set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/NoUnusedVariables-build)
+run_cmake_command(NoUnusedVariables ${CMAKE_COMMAND} ${CMAKE_CURRENT_LIST_DIR}
+  -G "Ninja Multi-Config"
+  "-DRunCMake_TEST=NoUnusedVariables"
+  "-DCMAKE_CROSS_CONFIGS=all"
+  "-DCMAKE_DEFAULT_BUILD_TYPE=Debug"
+  "-DCMAKE_DEFAULT_CONFIGS=all"
+  )
+
 if(CMake_TEST_CUDA)
   set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/CudaSimple-build)
   run_cmake_configure(CudaSimple)
@@ -287,7 +295,7 @@ endif()
 
 if(CMake_TEST_Qt5)
   set(RunCMake_TEST_BINARY_DIR ${RunCMake_BINARY_DIR}/Qt5-build)
-  set(RunCMake_TEST_OPTIONS "-DCMAKE_NMC_CROSS_CONFIGS=all")
+  set(RunCMake_TEST_OPTIONS "-DCMAKE_CROSS_CONFIGS=all")
   run_cmake_configure(Qt5)
   unset(RunCMake_TEST_OPTIONS)
   include(${RunCMake_TEST_BINARY_DIR}/target_files.cmake)

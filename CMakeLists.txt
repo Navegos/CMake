@@ -367,7 +367,7 @@ macro (CMAKE_BUILD_UTILITIES)
   # Setup third-party libraries.
   # Everything in the tree should be able to include files from the
   # Utilities directory.
-  if (CMAKE_SYSTEM_NAME STREQUAL "AIX" AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  if ((CMAKE_SYSTEM_NAME STREQUAL "AIX" OR CMAKE_SYSTEM_NAME STREQUAL "OS400") AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # using -isystem option generate error "template with C linkage"
     include_directories("${CMake_SOURCE_DIR}/Utilities/std")
   else()
@@ -810,6 +810,10 @@ if(NOT CMake_TEST_EXTERNAL_CMAKE)
     PATTERN "*.sh*" PERMISSIONS OWNER_READ OWNER_EXECUTE OWNER_WRITE
                                 GROUP_READ GROUP_EXECUTE
                                 WORLD_READ WORLD_EXECUTE
+    REGEX "/(ExportImportList|cpp)$"
+      PERMISSIONS OWNER_READ OWNER_EXECUTE OWNER_WRITE
+                  GROUP_READ GROUP_EXECUTE
+                  WORLD_READ WORLD_EXECUTE
     REGEX "Help/(dev|guide)($|/)" EXCLUDE
     )
 

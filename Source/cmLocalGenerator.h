@@ -513,6 +513,7 @@ protected:
   std::map<std::string, std::string> VariableMappings;
   std::string CompilerSysroot;
   std::string LinkerSysroot;
+  std::unordered_map<std::string, std::string> AppleArchSysroots;
 
   bool EmitUniversalBinaryFlags;
 
@@ -527,6 +528,8 @@ private:
                                    int targetType);
 
   void ComputeObjectMaxPath();
+  bool AllAppleArchSysrootsAreTheSame(const std::vector<std::string>& archs,
+                                      const char* sysroot);
 };
 
 #if !defined(CMAKE_BOOTSTRAP)
